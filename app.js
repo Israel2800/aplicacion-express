@@ -52,6 +52,23 @@ app.post('/login', jsonParser, function (req, res) {
     res.status(200).json({ 'status': 'ok' });
 });
 
+// Endpoint que devuelve una lista de tareas en JSON usando SELECT
+
+app.get('/all', (req, res) => {
+    const sql = 'SELECT id, todo, created_at FROM todos ORDER BY id DESC';
+
+    db.all(sql, [], (err, rows) => {
+        if(err) return res.status(500).json({ error: err.message });
+
+        res.status(200).json({
+            count: rows.length,
+            todos: rows
+        });
+    });
+
+});
+
+
 // --- INICIO DEL SERVIDOR ---
 
 // Solo escuchamos el puerto si este archivo es el principal (no es un test)
