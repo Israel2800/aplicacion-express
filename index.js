@@ -52,6 +52,23 @@ app.post('/login', jsonParser, function (req, res) {
     res.status(200).json({ 'status': 'ok' });
 });
 
+app.get('/todos', function (req, res) {
+  db.all('SELECT id, todo, created_at FROM todos ORDER BY id DESC', [], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'DB error', details: String(err) });
+    res.status(200).json(rows);
+  });
+});
+
+app.delete('/todos', function (req, res) {
+  db.run('DELETE FROM todos', [], function (err) {
+    if (err) {
+      return res.status(500).json({ error: 'DB error', details: String(err) });
+    }
+
+    res.status(200).json({ message: 'Todas las tareas eliminadas' });
+  });
+});
+
 // --- INICIO DEL SERVIDOR ---
 
 // Solo escuchamos el puerto si este archivo es el principal (no es un test)
